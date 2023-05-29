@@ -8,9 +8,12 @@ public class CajaDeProducto {
     private int correlativo;
     private LocalDateTime fechaDeIngreso;
 
-    public CajaDeProducto(LocalDateTime fechaDeIngreso) {
+    private String description;
+
+    public CajaDeProducto(LocalDateTime fechaDeIngreso, String description) {
         this.correlativo = generarCorrelativo();
         this.fechaDeIngreso = fechaDeIngreso;
+        this.description = description;
     }
 
     private static int generarCorrelativo() {
@@ -23,5 +26,13 @@ public class CajaDeProducto {
 
     public LocalDateTime getFechaDeIngreso() {
         return fechaDeIngreso;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

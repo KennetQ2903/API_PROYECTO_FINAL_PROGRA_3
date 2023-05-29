@@ -1,14 +1,11 @@
 package com.kennetquiroz.API;
 
 import Classes.CajaDeProducto;
+import Classes.CajaDeProductoRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,15 +21,22 @@ public class BoxesController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> agregarCaja() {
-        CajaDeProducto nuevaCaja = new CajaDeProducto(LocalDateTime.now());
-        pilaCajas.push(nuevaCaja);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Content-Type", "application/json")
-                .body("{\"message\": \"Caja agregada exitosamente.\"}");
+    public ResponseEntity<String> agregarCaja(@RequestBody CajaDeProductoRequest nuevaCaja) {
+        try{
+            LocalDateTime fechaIngreso = LocalDateTime.now();
+            CajaDeProducto cajaNueva = new CajaDeProducto(fechaIngreso, nuevaCaja.getDescription());
+            pilaCajas.push(cajaNueva);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .header("Content-Type", "application/json")
+                    .body("{\"message\": \"Caja agregada exitosamente.\"}");
+        } catch (Exception ex){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body("{\"message\": \"Algo salio mal, Error: "+ex.getMessage()+"\"}");
+        }
     }
 
-    @GetMapping
+    @GetMapping("/getUnit")
     public ResponseEntity<CajaDeProducto> sacarCaja() {
         if (pilaCajas.isEmpty()) {
             return ResponseEntity.noContent().build();

@@ -37,5 +37,9 @@ public class ApiApplication {
     public ListaCajasPorPedido listaCajasPorPedido() {
         return new ListaCajasPorPedido();
     }
+    @Bean
+    public DeliveryList deliveryList(){
+        return new DeliveryList();
+    }
 
 }
