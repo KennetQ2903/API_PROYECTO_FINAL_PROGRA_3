@@ -5,25 +5,25 @@ import java.time.LocalDateTime;
 public class Delivery {
     private int ID;
     private long cliente;
-    private String repartidor;
+    private Repartidor repartidor;
     private Vehiculo vehiculo;
     private String origen;
     private String destino;
     private LocalDateTime fechaInicio;
-    private int producto;
+    private CajaDeProducto producto;
     private String estado;
 
 
-    public Delivery(DeliveryRequest request, int ID, Vehiculo vehiculo) {
+    public Delivery(DeliveryRequest request, int ID, Vehiculo vehiculo, Repartidor repartidor, CajaDeProducto producto) {
         this.ID = ID;
         this.fechaInicio = generateFechaInicio();
         this.estado = deliveryPending();
         this.cliente = request.getCliente();
-        this.repartidor = request.getRepartidor();
+        this.repartidor = repartidor;
         this.vehiculo = vehiculo;
         this.origen = request.getOrigen();
         this.destino = request.getDestino();
-        this.producto = request.getProducto();
+        this.producto = producto;
     }
 
     public String deliveryComplete() {
@@ -52,11 +52,11 @@ public class Delivery {
         this.cliente = cliente;
     }
 
-    public String getRepartidor() {
+    public Repartidor getRepartidor() {
         return repartidor;
     }
 
-    public void setRepartidor(String repartidor) {
+    public void setRepartidor(Repartidor repartidor) {
         this.repartidor = repartidor;
     }
 
@@ -96,11 +96,11 @@ public class Delivery {
         this.fechaInicio = generateFechaInicio();
     }
 
-    public int getProducto() {
+    public CajaDeProducto getProducto() {
         return producto;
     }
 
-    public void setProducto(int producto) {
+    public void setProducto(CajaDeProducto producto) {
         this.producto = producto;
     }
 

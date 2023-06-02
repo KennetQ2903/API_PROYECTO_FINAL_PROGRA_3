@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 @SpringBootApplication
 public class ApiApplication {
@@ -36,6 +37,11 @@ public class ApiApplication {
     @Bean
     public ListaCajasPorPedido listaCajasPorPedido() {
         return new ListaCajasPorPedido();
+    }
+
+    @Bean
+    public Stack<CajaDeProducto> pilaCajas(){
+        return new Stack<>();
     }
     @Bean
     public DeliveryList deliveryList(){

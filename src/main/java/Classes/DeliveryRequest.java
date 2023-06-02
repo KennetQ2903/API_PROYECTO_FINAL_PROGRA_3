@@ -7,7 +7,6 @@ public class DeliveryRequest {
     private String repartidor;
     private String origen;
     private String destino;
-    private int producto;
 
     public long getCliente() {
         return cliente;
@@ -39,13 +38,5 @@ public class DeliveryRequest {
 
     public void setDestino(String destino) {
         this.destino = destino;
-    }
-
-    public int getProducto() {
-        return producto;
-    }
-
-    public void setProducto(int producto) {
-        this.producto = producto;
     }
 }

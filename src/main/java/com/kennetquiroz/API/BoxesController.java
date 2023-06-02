@@ -16,8 +16,8 @@ import java.util.Stack;
 public class BoxesController {
     Stack<CajaDeProducto> pilaCajas;
 
-    public BoxesController() {
-        pilaCajas = new Stack<>();
+    public BoxesController(Stack<CajaDeProducto> pilaCajas) {
+        this.pilaCajas = pilaCajas;
     }
 
     @PostMapping("/add")
