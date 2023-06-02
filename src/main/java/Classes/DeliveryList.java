@@ -26,8 +26,12 @@ public class DeliveryList {
         Node current = head;
         while (current != null) {
             if (current.getDelivery().getID() == deliveryID) {
-                current.getDelivery().setEstado("Completado");
-                return current.getDelivery();
+                if(current.getDelivery().getEstado() == "Completado"){
+                    return null;
+                }else{
+                    current.getDelivery().setEstado("Completado");
+                    return current.getDelivery();
+                }
             }
             current = current.getNext();
         }

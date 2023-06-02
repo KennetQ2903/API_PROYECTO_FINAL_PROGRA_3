@@ -14,47 +14,56 @@ import java.util.Stack;
 @RequestMapping("/api/delivery")
 public class DeliveryController {
     DeliveryList deliveryList;
+    AVLTreeClient avlTree;
     private Queue<Vehiculo> colaVehiculos;
     private Queue<Repartidor> colaRepartidores;
 
     private Stack<CajaDeProducto> pilaCajas;
 
-    public DeliveryController(DeliveryList deliveryList, Queue<Vehiculo> colaVehiculos, Queue<Repartidor> colaRepartidores, Stack<CajaDeProducto> pilaCajas) {
+    public DeliveryController(DeliveryList deliveryList, Queue<Vehiculo> colaVehiculos, Queue<Repartidor> colaRepartidores, Stack<CajaDeProducto> pilaCajas, AVLTreeClient avlTree) {
         this.deliveryList = deliveryList;
         this.colaVehiculos = colaVehiculos;
         this.colaRepartidores = colaRepartidores;
         this.pilaCajas = pilaCajas;
+        this.avlTree = avlTree;
     }
 
     @PostMapping("/add")
     public ResponseEntity<String> add(@RequestBody DeliveryRequest request) {
         try {
-            if (!pilaCajas.isEmpty()) {
-                if (!colaVehiculos.isEmpty()) {
-                    if (!colaRepartidores.isEmpty()) {
-                        Vehiculo foundVehicle = colaVehiculos.poll();
-                        Repartidor foundRepartidor = colaRepartidores.poll();
-                        CajaDeProducto producto = pilaCajas.pop();
-                        Delivery delivery = new Delivery(request, deliveryList.getSize() + 1, foundVehicle, foundRepartidor, producto);
-                        deliveryList.add(delivery);
-                        return ResponseEntity.status(HttpStatus.CREATED)
-                                .header("Content-Type", "application/json")
-                                .body("{\"message\": \"Pedido agregado exitosamente.\"}");
+            Cliente cliente = avlTree.buscarCliente(request.getCliente());
+            if (cliente != null) {
+                if (!pilaCajas.isEmpty()) {
+                    if (!colaVehiculos.isEmpty()) {
+                        if (!colaRepartidores.isEmpty()) {
+                            Vehiculo foundVehicle = colaVehiculos.poll();
+                            Repartidor foundRepartidor = colaRepartidores.poll();
+                            CajaDeProducto producto = pilaCajas.pop();
+                            Delivery delivery = new Delivery(request, deliveryList.getSize() + 1, foundVehicle, foundRepartidor, producto, cliente);
+                            deliveryList.add(delivery);
+                            return ResponseEntity.status(HttpStatus.CREATED)
+                                    .header("Content-Type", "application/json")
+                                    .body("{\"message\": \"Pedido agregado exitosamente.\"}");
+                        } else {
+                            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                    .header("Content-Type", "application/json")
+                                    .body("{\"message\": \"No hay repartidores disponibles.\"}");
+                        }
+
                     } else {
                         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                 .header("Content-Type", "application/json")
-                                .body("{\"message\": \"No hay repartidores disponibles.\"}");
+                                .body("{\"message\": \"No hay vehículos disponibles.\"}");
                     }
-
                 } else {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND)
                             .header("Content-Type", "application/json")
-                            .body("{\"message\": \"No hay vehículos disponibles.\"}");
+                            .body("{\"message\": \"No hay producto disponible en bodega.\"}");
                 }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .header("Content-Type", "application/json")
-                        .body("{\"message\": \"No hay producto disponible en bodega.\"}");
+                        .body("{\"message\": \"Cliente no encontrado.\"}");
             }
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -79,6 +88,8 @@ public class DeliveryController {
         try {
             Delivery complete = deliveryList.completeDelivery(deliveryID.getID());
             if (complete != null) {
+                colaVehiculos.add(complete.getVehiculo());
+                colaRepartidores.add(complete.getRepartidor());
                 return ResponseEntity.status(HttpStatus.OK)
                         .header("Content-Type", "application/json")
                         .body(complete);

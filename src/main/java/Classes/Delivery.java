@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class Delivery {
     private int ID;
-    private long cliente;
+    private Cliente cliente;
     private Repartidor repartidor;
     private Vehiculo vehiculo;
     private String origen;
@@ -14,11 +14,11 @@ public class Delivery {
     private String estado;
 
 
-    public Delivery(DeliveryRequest request, int ID, Vehiculo vehiculo, Repartidor repartidor, CajaDeProducto producto) {
+    public Delivery(DeliveryRequest request, int ID, Vehiculo vehiculo, Repartidor repartidor, CajaDeProducto producto, Cliente cliente) {
         this.ID = ID;
         this.fechaInicio = generateFechaInicio();
         this.estado = deliveryPending();
-        this.cliente = request.getCliente();
+        this.cliente = cliente;
         this.repartidor = repartidor;
         this.vehiculo = vehiculo;
         this.origen = request.getOrigen();
@@ -44,11 +44,11 @@ public class Delivery {
     }
 
 
-    public long getCliente() {
+    public Cliente getCliente() {
         return cliente;
     }
 
-    public void setCliente(long cliente) {
+    public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
 

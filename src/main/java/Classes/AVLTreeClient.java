@@ -138,5 +138,24 @@ public class AVLTreeClient {
         }
     }
 
+    public Cliente buscarCliente(long cui) {
+        NodeCliente node = buscarCliente(root, cui);
+        if (node != null) {
+            return node.client;
+        }
+        return null;
+    }
+
+    private NodeCliente buscarCliente(NodeCliente node, long cui) {
+        if (node == null || node.client.getCUI() == cui) {
+            return node;
+        }
+        if (cui < node.client.getCUI()) {
+            return buscarCliente(node.left, cui);
+        } else {
+            return buscarCliente(node.right, cui);
+        }
+    }
+
 
 }
